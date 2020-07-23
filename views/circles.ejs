@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Circle Patatap</title>
+	<link rel="icon" href="/icons/favicon.ico">
+	<script type="text/javascript" src="/js/lib/paper-full.js"></script>
+	<script type="text/javascript" src="/js/lib/howler.js"></script>
+	<script type="text/javascript" src="/js/data.js"></script> 
+	<link rel="stylesheet" type="text/css" href="/css/circles.css">
+	<script type="text/paperscript" canvas="myCanvas">
+	//data.js includes all the keybindings for color and sounds
+
+	var circles=[];
+	function onKeyDown(event) {
+		//if the key which we have defined is pressed
+		if(keyData[event.key]){
+			//play the sounds for that key
+			keyData[event.key].sound.play();
+			// gets the max point on canvas
+			var maxPoint = new Point(view.size.width, view.size.height);
+			//generates a random point btwn 0 to 1
+			var randomPoint = Point.random();
+			// get a random point on canvas
+			var point = maxPoint*randomPoint;
+			// When a key is pressed, make a circle:
+			var myCircle= new Path.Circle(point, 500);
+			myCircle.fillColor= keyData[event.key].color;
+			circles.push(myCircle);
+		}
+	}
+
+
+	function onFrame(event) {
+	// Each frame, change the fill color of the path slightly by
+	// adding 1 to its hue and reducing size
+		for(var i=0; i<circles.length;i++){
+			circles[i].fillColor.hue += 1;
+			circles[i].scale(0.92);
+			//if area is less than 50, remove the circle
+			if(circles[i].area<50){
+				//remove circle from canvas
+				circles[i].remove(); 
+				//remove the circle from the array
+				circles.splice(i,1);
+			}
+		}
+	}
+
+	</script>
+</head>
+<body>
+
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>
